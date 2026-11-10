@@ -15,6 +15,10 @@ d %>% group_by(player_name) %>% tally() %>% arrange(n) %>% tail()
 d %>% group_by(player_name) %>% tally() %>% arrange(player_name)
 d %>% group_by(pitcher) %>% tally() %>% arrange(pitcher)
 
+#Luis Gil
+d %>% filter(pitcher ==  661563)
+
+
 
 ggplot(d, aes(pitch_type)) + geom_bar()
 
