@@ -1,3 +1,6 @@
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
 
 d <- read_csv("data/sep2025_statcast.csv")
 d <- d %>% mutate(count = paste0(balls, "-", strikes))
