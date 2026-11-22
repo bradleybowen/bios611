@@ -8,6 +8,8 @@ d <- d %>% mutate(count = paste0(balls, "-", strikes))
 head(d)
 colnames(d)
 
+d %>% group_by(pitcher) %>% summarize(games_pitched = n_distinct(game_date))
+    
 
 #testing for fun
 
@@ -49,6 +51,8 @@ ggplot(pitcher_434378_09_06, aes(x = pitch_order,y = release_speed, color = pitc
 ggplot(pitcher_434378_09_06, aes(x = pitch_order,y = effective_speed, color = pitch_name, group = pitch_name)) + geom_line() + geom_point()
 ggplot(pitcher_434378_09_06, aes(x = pitch_order,y = release_extension, color = pitch_name, group = pitch_name)) + geom_line() + geom_point()
 ggplot(pitcher_434378_09_06, aes(x = pitch_order,y = release_spin_rate, color = pitch_name, group = pitch_name, shape = as.factor(inning))) + geom_line() + geom_point()
+ggplot(pitcher_434378_09_06, aes(x = pitch_order,y = release_speed, color = pitch_name, group = pitch_name, shape = as.factor(inning))) + geom_line() + geom_point()
+
 
 ggplot(pitcher_434378_09_06, aes(x = pitch_type)) + geom_bar() + facet_wrap(~count) 
 ggplot(pitcher_434378_09_06, aes(x = pitch_name)) + geom_bar() + facet_wrap(~count)
