@@ -25,5 +25,40 @@ pitch_order <- rank_pitch_counts %>% group_by(pitch_name) %>% summarize(mr = mea
 
 rank_pitch_counts$pitch_name <- factor(rank_pitch_counts$pitch_name, levels = pitch_order)
 
+rank_pitch_counts$count <- factor(rank_pitch_counts$count, levels = c("0-0", "0-1", "0-2", "1-0", "2-0", "3-0","1-1", "1-2", "2-1", "2-2", "3-2"))
+
+
+count_to_x <- function(r) {
+  x <- c( "0-0" = 0,"0-1"= 1,"0-2" = 2,"1-0"= 3,"2-0" = 4,"3-0"= 5,"1-1" = 6,"1-2"= 7, "2-1"= 8,"2-2" = 9,"3-2" = 10)
+  x[as.character(r)]
+}
+
+count_00 <- rank_pitch_counts %>% filter(count== "0-0")
+count_01 <- rank_pitch_counts %>% filter(count =="0-1")
+count_02 <- rank_pitch_counts %>% filter(count == "0-2")
+
+count_10 <- rank_pitch_counts %>% filter(count == "1-0")
+count_20 <- rank_pitch_counts %>% filter(count == "2-0")
+count_30 <- rank_pitch_counts %>% filter(count == "3-0")
+
+count_11 <- rank_pitch_counts %>% filter(count =="1-1")
+count_12 <- rank_pitch_counts %>% filter(count =="1-2")
+count_21 <- rank_pitch_counts %>% filter(count == "2-1")
+count_22 <- rank_pitch_counts %>% filter(count == "2-2")
+count_32 <- rank_pitch_counts %>% filter(count =="3-2")
+
+
+line_data_00_01 <- count_00 %>% left_join(count_01, by ="pitch_name") %>% select(-count.x, -count.y)
+line_data_01_02 <- count_01 %>% left_join(count_02, by ="pitch_name") %>% select(-count.x,-count.y)
+line_data_02_10 <- count_02 %>% left_join(count_10, by ="pitch_name") %>% select(-count.x, -count.y)
+
+line_data_10_20 <- count_10 %>% left_join(count_20, by ="pitch_name") %>% select(-count.x,-count.y)
+line_data_20_30 <- count_20 %>% left_join(count_30, by ="pitch_name") %>% select(-count.x,-count.y)
+line_data_30_11 <- count_30 %>% left_join(count_11, by = "pitch_name") %>% select(-count.x, -count.y)
+
+line_data_11_12 <- count_11 %>% left_join(count_12, by ="pitch_name") %>% select(-count.x, -count.y)
+line_data_12_21 <- count_12 %>% left_join(count_21, by ="pitch_name") %>% select(-count.x, -count.y)
+line_data_21_22 <- count_21 %>% left_join(count_22, by ="pitch_name") %>% select(-count.x, -count.y)
+line_data_22_32 <- count_22 %>% left_join(count_32, by ="pitch_name") %>% select(-count.x, -count.y)
 
 #order by average speed?
