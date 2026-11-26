@@ -6,7 +6,7 @@ jv_data <- read_csv("data/pitcher_verlander.csv")
 
 jv_data_vis1 <- jv_data %>% select(count, pitch_name)
 
-jv_data_vis1 <- jv_data
+jv_data_vis1 <- jv_data %>% filter(pitch_name != "NA")
 
 #adapting code from class
 probs <- jv_data_vis1 %>% inner_join(count_totals, by = "count") %>% group_by(pitch_name, count, total) %>%
@@ -61,4 +61,41 @@ line_data_12_21 <- count_12 %>% left_join(count_21, by ="pitch_name") %>% select
 line_data_21_22 <- count_21 %>% left_join(count_22, by ="pitch_name") %>% select(-count.x, -count.y)
 line_data_22_32 <- count_22 %>% left_join(count_32, by ="pitch_name") %>% select(-count.x, -count.y)
 
+
+line_data <- rbind(
+  line_data_00_01 %>% mutate(x = count_to_x("0-0"), xend = count_to_x("0-1")),
+  line_data_01_02 %>% mutate(x = count_to_x("0-1"), xend = count_to_x("0-2")),
+  line_data_02_10 %>% mutate(x = count_to_x("0-2"), xend = count_to_x("1-0")),
+  line_data_10_20 %>% mutate(x = count_to_x("1-0"), xend = count_to_x("2-0")),
+  line_data_20_30 %>% mutate(x = count_to_x("2-0"), xend = count_to_x("3-0")),
+  line_data_30_11 %>% mutate(x = count_to_x("3-0"), xend = count_to_x("1-1")),
+  line_data_11_12 %>% mutate(x = count_to_x("1-1"), xend = count_to_x("1-2")),
+  line_data_12_21 %>% mutate(x = count_to_x("1-2"), xend = count_to_x("2-1")),
+  line_data_21_22 %>% mutate(x = count_to_x("2-1"), xend = count_to_x("2-2")),
+  line_data_22_32 %>% mutate(x = count_to_x("2-2"), xend = count_to_x("3-2"))
+) 
+
+
+
+
+plot <- (ggplot(rank_pitch_counts) +
+           geom_rect(aes(xmin=count_to_x(count)-0.35, xmax=count_to_x(count)+0.35, ymin=rank-0.45, ymax=rank+0.45, fill=pitch_name), show.legend = FALSE) +
+           geom_text(aes(x=count_to_x(count), y=rank, label=pitch_name)) +
+           geom_segment(data = line_data_00_01, aes(x=0.35, xend=0.65, y = rank.x, yend = rank.y, color= pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_01_02, aes(x = 1.35, xend =1.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_02_10, aes(x = 2.35, xend = 2.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_10_20, aes(x =3.35, xend = 3.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_20_30, aes(x = 4.35, xend =4.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_30_11, aes(x=5.35, xend = 5.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_11_12, aes(x =6.35, xend= 6.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_12_21, aes(x =7.35, xend = 7.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_21_22, aes(x =8.35, xend =8.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           geom_segment(data = line_data_22_32, aes(x=9.35, xend =9.65, y = rank.x, yend = rank.y, color = pitch_name), show.legend = FALSE) +
+           ylim(0,7) +
+           scale_y_reverse(breaks = 1:6) +
+           scale_x_continuous(breaks=0:10, labels=c("0-0","0-1","0-2","1-0","2-0","3-0","1-1","1-2","2-1","2-2","3-2")) +
+           labs(x="count", y="rank", title="pitch name rankings by count for JV "))
+
+
+plot
 #order by average speed?
