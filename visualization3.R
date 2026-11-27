@@ -1,7 +1,5 @@
 #install.packages("sportyR")
 library(sportyR)
-devtools::install_github("bdilday/GeomMLBStadiums")
-
 
 jv_data <- read_csv("data/pitcher_verlander.csv")
 
