@@ -9,6 +9,9 @@ jv_data_vis1 <- jv_data %>% select(count, pitch_name)
 jv_data_vis1 <- jv_data %>% filter(pitch_name != "NA")
 
 #adapting code from class
+
+count_totals <- jv_data_vis1 %>% count(count, name = "total")
+
 probs <- jv_data_vis1 %>% inner_join(count_totals, by = "count") %>% group_by(pitch_name, count, total) %>%
   summarize(p = n() / total[1], .groups = "drop_last") %>% arrange(count, desc(p)) %>%
   group_by(count) %>% mutate(rank = row_number()) %>%
